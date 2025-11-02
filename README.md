@@ -7,11 +7,12 @@
 ## 🎯 Overview
 
 LeadOn CRM combines:
+- **🤖 Agentic AI Systems**: Autonomous agents that iteratively search, analyze, and optimize lead generation
 - **AI-Powered Search**: Natural language queries to find contacts (e.g., "Find CTOs at AI companies in San Francisco")
 - **Apollo.io Integration**: Real contact data with 275M+ contacts and 73M+ companies
-- **Automatic Enrichment**: Company profiles, job postings, and phone numbers
+- **Intelligent Enrichment**: AI analyzes job postings, company profiles, and generates personalized pitches
+- **LinkedIn Automation**: Automated likes, connections, and endorsements with session management
 - **Telegram Campaigns**: Send personalized DMs with rate limiting (10/day, 1/hour)
-- **LinkedIn Integration**: Connect LinkedIn accounts for future automation
 - **Custom CRM**: Modern interface with contacts, companies, and campaigns management
 
 ---
@@ -187,7 +188,32 @@ LeadOn/
 
 ## 🔑 Key Features
 
-### 1. AI-Powered Contact Discovery
+### 1. 🤖 Agentic AI Systems
+
+LeadOn uses **autonomous AI agents** that iteratively refine and optimize searches:
+
+**Agentic Search Service:**
+- AI agent runs multiple search iterations to find the best contacts
+- Automatically refines queries based on results
+- Learns from each iteration to improve targeting
+- Combines multiple data sources intelligently
+- Example: "Find CTOs at AI companies" → Agent searches, analyzes results, refines criteria, searches again
+
+**Job Enrichment Agent:**
+- Scrapes company job postings automatically
+- AI analyzes job descriptions to match your product
+- Scores companies based on relevance (0-100)
+- Finds decision-makers at companies actively hiring
+- Generates match reasoning for each company
+
+**AI Pitch Generator:**
+- Analyzes contact's role, company, and industry
+- Generates personalized outreach messages using Claude
+- Considers search context (why they were found)
+- Creates multiple variations for A/B testing
+- Keeps messages under LinkedIn's 280-character limit
+
+### 2. AI-Powered Contact Discovery
 
 Use natural language to find contacts:
 
@@ -212,7 +238,37 @@ The AI agent:
 - Company information (size, funding, tech stack)
 - Job titles and seniority levels
 
-### 3. Telegram DM Campaigns
+### 3. LinkedIn Automation
+
+Automate LinkedIn outreach with intelligent bot:
+
+**Features:**
+- **Session Management**: Persistent login with cookie-based authentication
+- **Like Posts**: Automatically like recent posts on target profiles
+- **Send Connections**: Send personalized connection requests
+- **Endorse Skills**: Endorse skills to build rapport
+- **Rate Limiting**: Respects LinkedIn limits to avoid detection
+- **Workflow Tracking**: Updates CRM with automation status
+
+**Actions:**
+```python
+# Like 3 recent posts
+bot.like_posts(profile_url, count=3)
+
+# Send connection request
+bot.send_connection_request(profile_url, note="Hi {name}...")
+
+# Endorse skills
+bot.endorse_skills(profile_url, skills=["Python", "AI"])
+```
+
+**Integration:**
+- Connects directly to CRM database
+- Updates contact workflow stages automatically
+- Tracks last action and next action dates
+- Stores automation notes for each contact
+
+### 4. Telegram DM Campaigns
 
 Send personalized messages via Telegram:
 
@@ -239,7 +295,7 @@ I'd love to connect and discuss how we can help with [your value proposition].
 Best regards
 ```
 
-### 4. Company Enrichment
+### 5. Company Enrichment
 
 Automatic company data enrichment:
 - Founded year, funding stage, total funding
@@ -249,7 +305,7 @@ Automatic company data enrichment:
 - AI-generated industry analysis
 - Pain points and value propositions
 
-### 5. Workflow Management
+### 6. Workflow Management
 
 Track contacts through 9 stages:
 1. **new** - Just added
@@ -262,7 +318,7 @@ Track contacts through 9 stages:
 8. **opportunity** - Potential deal
 9. **disqualified** - Not a fit
 
-### 6. Tagging System
+### 7. Tagging System
 
 Automatic tags based on:
 - **Role**: founder, c_level, vp, director, manager, individual_contributor
