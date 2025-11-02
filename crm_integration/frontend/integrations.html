@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrations - LeadOn CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b border-gray-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-indigo-600">LeadOn CRM</h1>
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="/crm" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Contacts</a>
+                        <a href="/crm/companies" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Companies</a>
+                        <a href="/crm/campaigns" class="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Campaigns</a>
+                        <a href="/crm/integrations" class="text-indigo-600 bg-indigo-50 px-3 py-2 rounded-md text-sm font-medium">Integrations</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h2 class="text-3xl font-bold text-gray-900">Integrations</h2>
+            <p class="mt-2 text-gray-600">Connect your accounts to automate campaigns</p>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="text-center py-12">
+            <i class="fas fa-spinner fa-spin text-4xl text-indigo-600"></i>
+            <p class="mt-4 text-gray-600">Loading integrations...</p>
+        </div>
+
+        <!-- Integrations Container -->
+        <div id="integrations-container" class="hidden">
+            <!-- Add Integration Buttons -->
+            <div class="mb-6 flex gap-4">
+                <button onclick="connectLinkedIn()" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center">
+                    <i class="fab fa-linkedin mr-2"></i>Add LinkedIn Account
+                </button>
+                <button onclick="connectTelegram()" class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors flex items-center">
+                    <i class="fab fa-telegram-plane mr-2"></i>Add Telegram Account
+                </button>
+            </div>
+
+            <!-- Connected Accounts List -->
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Connected Accounts</h2>
+                </div>
+
+                <div id="accounts-list" class="divide-y divide-gray-200">
+                    <!-- Accounts will be dynamically inserted here -->
+                </div>
+
+                <div id="no-accounts" class="hidden p-8 text-center text-gray-500">
+                    <i class="fas fa-plug text-4xl mb-3 text-gray-300"></i>
+                    <p>No accounts connected yet. Click the buttons above to add an account.</p>
+                </div>
+            </div>
+
+            <!-- Integration Guide -->
+            <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <h3 class="text-lg font-semibold text-blue-900 mb-3">
+                    <i class="fas fa-info-circle mr-2"></i>How to use integrations
+                </h3>
+                <div class="space-y-2 text-sm text-blue-800">
+                    <p><strong>1. Connect your accounts</strong> - Click the connect button for LinkedIn or Telegram</p>
+                    <p><strong>2. Configure settings</strong> - Set up automation rules and message templates</p>
+                    <p><strong>3. Create campaigns</strong> - Go to Campaigns page and select which integration to use</p>
+                    <p><strong>4. Monitor results</strong> - Track messages sent, connections made, and responses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LinkedIn Connection Modal -->
+    <div id="linkedin-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900">Connect LinkedIn Account</h3>
+                    <button onclick="closeLinkedInModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">LinkedIn Email</label>
+                        <input type="email" id="linkedin-email" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="your@email.com">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">LinkedIn Password</label>
+                        <input type="password" id="linkedin-password" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+                    </div>
+                    
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                        <p class="text-xs text-yellow-800">
+                            <i class="fas fa-exclamation-triangle mr-1"></i>
+                            <strong>Note:</strong> Your credentials are encrypted and stored securely. We use LinkedIn's official API for automation.
+                        </p>
+                    </div>
+                    
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeLinkedInModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button onclick="saveLinkedInConnection()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            <i class="fab fa-linkedin mr-2"></i>Connect
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Telegram Connection Modal -->
+    <div id="telegram-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold text-gray-900">Connect Telegram User API</h3>
+                    <button onclick="closeTelegramModal()" class="text-gray-400 hover:text-gray-600">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">API ID</label>
+                        <input type="text" id="telegram-api-id" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="12345678">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">API Hash</label>
+                        <input type="text" id="telegram-api-hash" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="abcdef1234567890abcdef1234567890">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                        <input type="text" id="telegram-phone" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="+1234567890">
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                        <p class="text-xs text-blue-800 mb-2">
+                            <strong>How to get Telegram User API credentials:</strong>
+                        </p>
+                        <ol class="text-xs text-blue-700 space-y-1 list-decimal list-inside">
+                            <li>Go to <a href="https://my.telegram.org/apps" target="_blank" class="underline">https://my.telegram.org/apps</a></li>
+                            <li>Log in with your phone number</li>
+                            <li>Create a new application</li>
+                            <li>Copy the API ID and API Hash</li>
+                            <li>Enter your phone number with country code (e.g., +1234567890)</li>
+                        </ol>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <button onclick="closeTelegramModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button onclick="saveTelegramConnection()" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+                            <i class="fab fa-telegram-plane mr-2"></i>Connect
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="integrations.js"></script>
+</body>
+</html>
+

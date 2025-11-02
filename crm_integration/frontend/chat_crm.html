@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadOn CRM - AI-Powered Lead Generation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Chat Section */
+        .chat-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .chat-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .chat-input-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chat-response {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .chat-response.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .response-text {
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .response-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* CRM Section */
+        .crm-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .crm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .crm-header h2 {
+            color: #333;
+            font-size: 1.5em;
+        }
+
+        .crm-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .contacts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .contacts-table thead {
+            background: #f8f9fa;
+        }
+
+        .contacts-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #333;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .contacts-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #666;
+        }
+
+        .contacts-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .checkbox {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 500;
+            margin-right: 5px;
+        }
+
+        .tag-investor { background: #dbeafe; color: #1e40af; }
+        .tag-ai { background: #e9d5ff; color: #6b21a8; }
+        .tag-vc { background: #d1fae5; color: #065f46; }
+        .tag-tech { background: #fed7aa; color: #9a3412; }
+        .tag-startup { background: #fce7f3; color: #9f1239; }
+
+        .link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 LeadOn CRM</h1>
+            <p>AI-Powered Lead Generation & Relationship Management</p>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <h2>💬 Tell us what you're looking for</h2>
+            <div class="chat-input-group">
+                <input 
+                    type="text" 
+                    id="chatInput" 
+                    class="input-field" 
+                    placeholder="e.g., Find CTOs at AI companies in San Francisco for partnership campaign"
+                    onkeypress="if(event.key==='Enter') searchContacts()"
+                >
+                <input
+                    type="text"
+                    id="websiteInput"
+                    class="input-field"
+                    placeholder="Website URL (optional)"
+                    style="flex: 0.5;"
+                >
+                <button class="btn-primary" onclick="searchContacts()" id="searchBtn">
+                    Search
+                </button>
+            </div>
+
+            <!-- Search Options -->
+            <div style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                <!-- Contact Limit -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                        💰 Max Contacts to Find (Apollo Credits)
+                    </label>
+                    <input
+                        type="number"
+                        id="maxContacts"
+                        class="input-field"
+                        placeholder="25"
+                        value="25"
+                        min="1"
+                        max="100"
+                        style="width: 200px;"
+                    >
+                    <p style="margin-top: 5px; color: #666; font-size: 0.85em;">
+                        Each contact uses 1 Apollo credit. Default: 25 contacts.
+                    </p>
+                </div>
+
+                <!-- Job Enrichment -->
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                    <input type="checkbox" id="enrichWithJobs" style="width: 20px; height: 20px; cursor: pointer;">
+                    <span style="font-weight: 600; color: #333;">
+                        🎯 Enrich with Job Postings
+                    </span>
+                </label>
+                <p style="margin-left: 30px; margin-top: 8px; color: #666; font-size: 0.9em;">
+                    Scrape job postings to find companies hiring for relevant roles, then use Apollo to find decision-makers at those companies. AI will score companies based on fit.
+                </p>
+                <div id="productDescriptionContainer" style="margin-top: 15px; display: none;">
+                    <input
+                        type="text"
+                        id="productDescription"
+                        class="input-field"
+                        placeholder="Describe your product/service (helps AI match better companies)"
+                        style="width: 100%;"
+                    >
+                </div>
+            </div>
+
+            <div id="chatResponse" class="chat-response">
+                <div class="response-text" id="responseText"></div>
+                <div class="response-stats">
+                    <div class="stat">
+                        <span>📊</span>
+                        <span id="contactsFound">0 contacts found</span>
+                    </div>
+                    <div class="stat">
+                        <span>✅</span>
+                        <span id="contactsAdded">0 added to CRM</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CRM Section -->
+        <div class="crm-section">
+            <div class="crm-header">
+                <h2>📊 All Contacts</h2>
+                <div class="crm-actions">
+                    <button class="btn-secondary" onclick="refreshContacts()">🔄 Refresh</button>
+                    <button class="btn-secondary" onclick="selectAll()">☑️ Select All</button>
+                    <button class="btn-success" onclick="startCampaign()">🚀 Start Campaign</button>
+                </div>
+            </div>
+
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="stat-value" id="totalContacts">0</div>
+                    <div class="stat-label">Total Contacts</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="selectedContacts">0</div>
+                    <div class="stat-label">Selected</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="totalCompanies">0</div>
+                    <div class="stat-label">Companies</div>
+                </div>
+            </div>
+
+            <div id="contactsContainer">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <h3>No contacts yet</h3>
+                    <p>Use the chat above to search for contacts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let contacts = [];
+        let selectedIds = new Set();
+
+        // Toggle product description field
+        document.getElementById('enrichWithJobs').addEventListener('change', function(e) {
+            const container = document.getElementById('productDescriptionContainer');
+            container.style.display = e.target.checked ? 'block' : 'none';
+        });
+
+        // Search contacts via chat
+        async function searchContacts() {
+            const chatInput = document.getElementById('chatInput');
+            const websiteInput = document.getElementById('websiteInput');
+            const enrichWithJobs = document.getElementById('enrichWithJobs');
+            const productDescription = document.getElementById('productDescription');
+            const maxContacts = document.getElementById('maxContacts');
+            const searchBtn = document.getElementById('searchBtn');
+            const responseDiv = document.getElementById('chatResponse');
+
+            const message = chatInput.value.trim();
+            if (!message) {
+                alert('Please enter a search query');
+                return;
+            }
+
+            // Show loading
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<span class="loading"></span>';
+
+            try {
+                const requestBody = {
+                    message: message,
+                    website_url: websiteInput.value.trim() || null,
+                    enrich_with_jobs: enrichWithJobs.checked,
+                    product_description: productDescription.value.trim() || null,
+                    max_contacts: parseInt(maxContacts.value) || 25
+                };
+
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const data = await response.json();
+
+                // Show response
+                document.getElementById('responseText').textContent = data.response;
+                document.getElementById('contactsFound').textContent = `${data.contacts_found} contacts found`;
+                document.getElementById('contactsAdded').textContent = `${data.contacts_added} added to CRM`;
+                responseDiv.classList.add('show');
+
+                // Refresh contacts table
+                await refreshContacts();
+
+                // Clear input
+                chatInput.value = '';
+
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                searchBtn.disabled = false;
+                searchBtn.textContent = 'Search';
+            }
+        }
+
+        // Refresh contacts from API
+        async function refreshContacts() {
+            try {
+                const response = await fetch('/api/contacts?limit=1000');
+                const data = await response.json();
+                contacts = data.contacts;
+                renderContacts();
+                updateStats();
+            } catch (error) {
+                console.error('Error fetching contacts:', error);
+            }
+        }
+
+        // Render contacts table
+        function renderContacts() {
+            const container = document.getElementById('contactsContainer');
+
+            if (contacts.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No contacts yet</h3>
+                        <p>Use the chat above to search for contacts</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const html = `
+                <table class="contacts-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" class="checkbox" onchange="toggleSelectAll(this)"></th>
+                            <th>Name</th>
+                            <th>Title</th>
+                            <th>Company</th>
+                            <th>Email</th>
+                            <th>Tags</th>
+                            <th>Links</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${contacts.map(contact => `
+                            <tr>
+                                <td>
+                                    <input 
+                                        type="checkbox" 
+                                        class="checkbox contact-checkbox" 
+                                        data-id="${contact.id}"
+                                        onchange="toggleContact('${contact.id}')"
+                                        ${selectedIds.has(contact.id) ? 'checked' : ''}
+                                    >
+                                </td>
+                                <td><strong>${contact.name}</strong></td>
+                                <td>${contact.title || '-'}</td>
+                                <td>${contact.company || '-'}</td>
+                                <td>${contact.email || '-'}</td>
+                                <td>
+                                    ${contact.tags.map(tag => 
+                                        `<span class="tag tag-${tag}">${tag}</span>`
+                                    ).join('')}
+                                </td>
+                                <td>
+                                    ${contact.linkedin_url ? 
+                                        `<a href="${contact.linkedin_url}" target="_blank" class="link">LinkedIn</a>` 
+                                        : '-'}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Toggle contact selection
+        function toggleContact(id) {
+            if (selectedIds.has(id)) {
+                selectedIds.delete(id);
+            } else {
+                selectedIds.add(id);
+            }
+            updateStats();
+        }
+
+        // Toggle select all
+        function toggleSelectAll(checkbox) {
+            const checkboxes = document.querySelectorAll('.contact-checkbox');
+            checkboxes.forEach(cb => {
+                cb.checked = checkbox.checked;
+                const id = cb.dataset.id;
+                if (checkbox.checked) {
+                    selectedIds.add(id);
+                } else {
+                    selectedIds.delete(id);
+                }
+            });
+            updateStats();
+        }
+
+        // Select all contacts
+        function selectAll() {
+            contacts.forEach(contact => selectedIds.add(contact.id));
+            renderContacts();
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            document.getElementById('totalContacts').textContent = contacts.length;
+            document.getElementById('selectedContacts').textContent = selectedIds.size;
+            
+            const uniqueCompanies = new Set(contacts.map(c => c.company).filter(Boolean));
+            document.getElementById('totalCompanies').textContent = uniqueCompanies.size;
+        }
+
+        // Start campaign
+        async function startCampaign() {
+            if (selectedIds.size === 0) {
+                alert('Please select at least one contact');
+                return;
+            }
+
+            const confirmed = confirm(
+                `Start LinkedIn automation for ${selectedIds.size} contacts?\n\n` +
+                `This will:\n` +
+                `1. Like 3 recent posts on their profile\n` +
+                `2. Send connection request\n\n` +
+                `Note: Browser will open and run automation`
+            );
+            
+            if (!confirmed) return;
+
+            try {
+                const contactIds = Array.from(selectedIds);
+                
+                // Show loading state
+                const originalText = event.target.textContent;
+                event.target.textContent = '⏳ Running automation...';
+                event.target.disabled = true;
+
+                const response = await fetch('/api/linkedin/campaign/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contact_ids: contactIds,
+                        actions: ['like_posts', 'send_connection'],
+                        like_count: 3,
+                        headless: false  // Show browser for visibility
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    const results = data.results;
+                    alert(
+                        `✅ Campaign Complete!\n\n` +
+                        `Total: ${results.total}\n` +
+                        `Successful: ${results.successful}\n` +
+                        `Failed: ${results.failed}\n` +
+                        `Skipped: ${results.skipped}\n\n` +
+                        `Check contact details for automation notes.`
+                    );
+                    
+                    // Refresh contacts to show updated status
+                    refreshContacts();
+                    selectedIds.clear();
+                    updateActionBar();
+                } else {
+                    alert(`❌ Error: ${data.detail || 'Campaign failed'}`);
+                }
+
+                // Restore button
+                event.target.textContent = originalText;
+                event.target.disabled = false;
+
+            } catch (error) {
+                alert(`❌ Error starting campaign: ${error.message}`);
+                event.target.textContent = '🚀 Start Campaign';
+                event.target.disabled = false;
+            }
+        }
+
+        // Initialize
+        refreshContacts();
+    </script>
+</body>
+</html>
+

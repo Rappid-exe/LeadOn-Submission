@@ -1,0 +1,50 @@
+# Core dependencies
+requests==2.31.0
+python-dotenv==1.0.0
+
+# Data validation and parsing
+pydantic==2.5.0
+pydantic-settings==2.1.0
+
+# CLI framework
+typer==0.9.0
+rich==13.7.0
+
+# Retry logic and rate limiting
+tenacity==8.2.3
+
+# Date/time handling
+python-dateutil==2.8.2
+
+# JSON handling
+orjson==3.9.10
+
+# Logging
+loguru==0.7.2
+
+# API Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# AI/LLM
+anthropic==0.39.0
+
+# Database
+sqlalchemy==2.0.23
+
+# Web scraping
+beautifulsoup4==4.12.2
+pandas==2.1.3
+httpx==0.25.2
+
+# Telegram User API
+telethon==1.34.0
+
+# Selenium (if needed later)
+# selenium==4.15.2
+# webdriver-manager==4.0.1
+
+# FastAPI (for CRM API)
+# fastapi==0.104.1
+# uvicorn==0.24.0
+

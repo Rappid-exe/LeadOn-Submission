@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LeadOn Pro - AI-Powered Lead Generation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-slide-in { animation: slideIn 0.3s ease-out; }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out; }
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .hover-lift {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .hover-lift:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .modal-backdrop {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+        }
+        .tag-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .spinner {
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                z-index: 40;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="gradient-bg text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-rocket text-2xl"></i>
+                    <h1 class="text-2xl font-bold">LeadOn Pro</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button onclick="showView('dashboard')" class="px-4 py-2 rounded-lg hover:bg-white/20 transition" id="nav-dashboard">
+                        <i class="fas fa-chart-line mr-2"></i>Dashboard
+                    </button>
+                    <button onclick="showView('search')" class="px-4 py-2 rounded-lg hover:bg-white/20 transition" id="nav-search">
+                        <i class="fas fa-search mr-2"></i>Search
+                    </button>
+                    <button onclick="showView('contacts')" class="px-4 py-2 rounded-lg hover:bg-white/20 transition" id="nav-contacts">
+                        <i class="fas fa-users mr-2"></i>Contacts
+                    </button>
+                    <button onclick="showView('campaigns')" class="px-4 py-2 rounded-lg hover:bg-white/20 transition" id="nav-campaigns">
+                        <i class="fas fa-bullhorn mr-2"></i>Campaigns
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view-container">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <!-- Stat Cards -->
+                <div class="bg-white rounded-xl shadow-md p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Total Contacts</p>
+                            <p class="text-3xl font-bold text-purple-600" id="stat-total-contacts">0</p>
+                        </div>
+                        <div class="bg-purple-100 rounded-full p-3">
+                            <i class="fas fa-users text-purple-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Companies</p>
+                            <p class="text-3xl font-bold text-blue-600" id="stat-companies">0</p>
+                        </div>
+                        <div class="bg-blue-100 rounded-full p-3">
+                            <i class="fas fa-building text-blue-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Active Campaigns</p>
+                            <p class="text-3xl font-bold text-green-600" id="stat-campaigns">0</p>
+                        </div>
+                        <div class="bg-green-100 rounded-full p-3">
+                            <i class="fas fa-bullhorn text-green-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6 hover-lift">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm font-medium">Response Rate</p>
+                            <p class="text-3xl font-bold text-orange-600">0%</p>
+                        </div>
+                        <div class="bg-orange-100 rounded-full p-3">
+                            <i class="fas fa-chart-line text-orange-600 text-xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">
+                    <i class="fas fa-clock mr-2 text-purple-600"></i>Recent Activity
+                </h2>
+                <div id="recent-activity" class="space-y-3">
+                    <p class="text-gray-500 text-center py-8">No recent activity</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search View -->
+        <div id="view-search" class="view-container hidden">
+            <div class="bg-white rounded-xl shadow-md p-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-search mr-2 text-purple-600"></i>AI-Powered Contact Search
+                </h2>
+
+                <!-- Search Input -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">What are you looking for?</label>
+                    <div class="flex gap-3">
+                        <input 
+                            type="text" 
+                            id="search-input" 
+                            class="flex-1 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                            placeholder="e.g., Find CTOs at AI companies in San Francisco"
+                            onkeypress="if(event.key==='Enter') performSearch()"
+                        >
+                        <input
+                            type="text"
+                            id="website-input"
+                            class="w-64 px-4 py-3 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                            placeholder="Website URL (optional)"
+                        >
+                        <button 
+                            onclick="performSearch()" 
+                            id="search-btn"
+                            class="px-8 py-3 gradient-bg text-white rounded-lg font-semibold hover:shadow-lg transition"
+                        >
+                            <i class="fas fa-search mr-2"></i>Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search Options -->
+                <div class="bg-gray-50 rounded-lg p-6 space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                <i class="fas fa-coins mr-2 text-yellow-500"></i>Max Contacts (Apollo Credits)
+                            </label>
+                            <input
+                                type="number"
+                                id="max-contacts"
+                                class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                                value="25"
+                                min="1"
+                                max="100"
+                            >
+                            <p class="text-xs text-gray-500 mt-1">Each contact uses 1 Apollo credit</p>
+                        </div>
+
+                        <div>
+                            <label class="flex items-center space-x-3 cursor-pointer">
+                                <input type="checkbox" id="enrich-jobs" class="w-5 h-5 text-purple-600 rounded" onchange="toggleJobEnrichment()">
+                                <span class="text-sm font-medium text-gray-700">
+                                    <i class="fas fa-briefcase mr-2 text-purple-600"></i>Enrich with Job Postings
+                                </span>
+                            </label>
+                            <p class="text-xs text-gray-500 mt-2 ml-8">
+                                Find companies hiring for relevant roles, then find decision-makers
+                            </p>
+                            <div id="product-desc-container" class="hidden mt-3 ml-8">
+                                <input
+                                    type="text"
+                                    id="product-description"
+                                    class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                                    placeholder="Describe your product/service"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div id="search-results" class="mt-6 hidden animate-slide-in">
+                    <div class="bg-purple-50 border-l-4 border-purple-500 p-4 rounded-lg">
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-purple-500 text-xl mr-3 mt-1"></i>
+                            <div class="flex-1">
+                                <p class="font-medium text-gray-800" id="search-response-text"></p>
+                                <div class="flex gap-6 mt-2 text-sm text-gray-600">
+                                    <span><i class="fas fa-users mr-1"></i><span id="search-contacts-found">0</span> contacts found</span>
+                                    <span><i class="fas fa-plus-circle mr-1"></i><span id="search-contacts-added">0</span> added to CRM</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contacts View -->
+        <div id="view-contacts" class="view-container hidden">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-users mr-2 text-purple-600"></i>All Contacts
+                        <span class="text-lg text-gray-500 ml-2" id="contacts-count">(0)</span>
+                    </h2>
+                    <div class="flex gap-3">
+                        <input
+                            type="text"
+                            id="filter-input"
+                            class="px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none"
+                            placeholder="Filter contacts..."
+                            oninput="filterContacts()"
+                        >
+                        <button onclick="refreshContacts()" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+                            <i class="fas fa-sync-alt mr-2"></i>Refresh
+                        </button>
+                        <button onclick="selectAllContacts()" class="px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition">
+                            <i class="fas fa-check-square mr-2"></i>Select All
+                        </button>
+                        <button onclick="exportContacts()" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                            <i class="fas fa-download mr-2"></i>Export CSV
+                        </button>
+                        <button onclick="showCampaignModal()" class="px-4 py-2 gradient-bg text-white rounded-lg hover:shadow-lg transition">
+                            <i class="fas fa-rocket mr-2"></i>Start Campaign
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contacts Table -->
+                <div id="contacts-container" class="overflow-x-auto">
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+                        <p class="text-lg">No contacts yet</p>
+                        <p class="text-sm">Use the search feature to find contacts</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Campaigns View -->
+        <div id="view-campaigns" class="view-container hidden">
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">
+                        <i class="fas fa-bullhorn mr-2 text-purple-600"></i>Campaigns
+                    </h2>
+                    <button onclick="showCampaignModal()" class="px-4 py-2 gradient-bg text-white rounded-lg hover:shadow-lg transition">
+                        <i class="fas fa-plus mr-2"></i>New Campaign
+                    </button>
+                </div>
+
+                <div id="campaigns-container">
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-bullhorn text-6xl mb-4 text-gray-300"></i>
+                        <p class="text-lg">No campaigns yet</p>
+                        <p class="text-sm">Create your first campaign to start reaching out</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Contact Detail Modal -->
+    <div id="contact-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeContactModal()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="glass-effect rounded-xl shadow-2xl max-w-2xl w-full p-8 relative animate-slide-in">
+                <button onclick="closeContactModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <div id="contact-modal-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campaign Modal -->
+    <div id="campaign-modal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeCampaignModal()"></div>
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="glass-effect rounded-xl shadow-2xl max-w-2xl w-full p-8 relative animate-slide-in">
+                <button onclick="closeCampaignModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-times text-2xl"></i>
+                </button>
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-rocket mr-2 text-purple-600"></i>Create Campaign
+                </h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Campaign Name</label>
+                        <input type="text" id="campaign-name" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="e.g., Q1 Outreach">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Message Template</label>
+                        <textarea id="campaign-message" rows="4" class="w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none" placeholder="Hi {name}, I noticed..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Selected Contacts</label>
+                        <p class="text-gray-600"><span id="campaign-contact-count">0</span> contacts selected</p>
+                    </div>
+                    <div class="flex gap-3 pt-4">
+                        <button onclick="createCampaign()" class="flex-1 px-6 py-3 gradient-bg text-white rounded-lg font-semibold hover:shadow-lg transition">
+                            <i class="fas fa-rocket mr-2"></i>Launch Campaign
+                        </button>
+                        <button onclick="closeCampaignModal()" class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                            Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="leadon_pro.js"></script>
+</body>
+</html>
+
