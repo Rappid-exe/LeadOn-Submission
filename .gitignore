@@ -94,7 +94,20 @@ CRM/twenty/
 .dmypy.json
 dmypy.json
 
-# Submission cleanup
+# Submission cleanup files (not needed in submission)
 MAGIC_WAND_FIX.md
 cleanup_for_submission.py
+CLEAN_PUSH_INSTRUCTIONS.md
+PUSH_TO_SUBMISSION.md
+SUBMISSION_CHECKLIST.md
+SUBMISSION_GUIDE.md
+clean_push.bat
+
+# Utility scripts not needed in submission
+linkedin_scrape.py
+restart_server.ps1
+setup_claude.bat
+start_chat_crm.bat
+start_twenty_crm.bat
+start_twenty_with_leadgen.bat
 
